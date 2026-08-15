@@ -1,10 +1,11 @@
 import express from "express";
-import { fetchUser, register, signIn } from "../controllers/user_controller.js";
+import { fetchAll, fetchUser, register, signIn } from "../controllers/user_controller.js";
 import { auth } from "../middleware/auth.js";
 const router = express.Router();
 
 router.post("/register",register);
 router.post("/signin",signIn);
 router.get("/fetchUser",auth,fetchUser);
+router.get("/fetchAllUsers",auth,fetchAll);
 
 export default router;

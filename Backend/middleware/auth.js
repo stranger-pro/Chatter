@@ -14,8 +14,7 @@ export const auth = async(req,res,next) => {
         }
 
         
-        console.log(process.env.JWT_SECTRET_KEY)
-        console.log(token)
+    
         const decode = await jwt.verify(token,process.env.JWT_SECTRET_KEY);
         req.user = decode;
 

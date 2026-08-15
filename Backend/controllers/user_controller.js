@@ -133,3 +133,30 @@ export const fetchUser = async(req,res) => {
     }
 }
 
+export const fetchAll = async(req,res) => {
+    try{
+
+        const users = await User.find().select("-password -chats");
+
+        if(!users){
+            return res.status(401).json({
+                success:false,
+                message:"Error In User Fetching"
+            })
+        };
+
+        return res.status(200).json({
+            success:true,
+            users,
+            message:"All Users Fetched Successfully"
+        })
+
+
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}

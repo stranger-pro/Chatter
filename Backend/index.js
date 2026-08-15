@@ -1,6 +1,8 @@
 import express, { urlencoded } from "express"
 import cors from "cors"
 import userRoute from "./routes/user.js"
+import chatRoute from "./routes/chat.js"
+import messageRoute from "./routes/message.js"
 import {connectDb} from "./config/db.js"
 import dotenv from "dotenv"
 import http from "http"
@@ -20,6 +22,8 @@ app.use(
 );
 
 app.use("/api/user", userRoute);
+app.use("/api/chat", chatRoute);
+app.use("/api/message", messageRoute);
 
 const server = http.createServer(app);
 
