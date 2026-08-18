@@ -9,9 +9,11 @@ dotenv.config();
 export const register = async(req,res) => {
     try{
 
-        const {email,password} = req.body;
+        const {password} = req.body;
 
-        if(!email || !password){
+        const email = req.body.email.trim().toLowerCase();
+
+        if(!email || !password || !email.includes('@gmail.com')){
             return res.status(403).json({
                 success:false,
                 message:"All fields required"
@@ -21,7 +23,7 @@ export const register = async(req,res) => {
         const userAlredyExit = await User.findOne({email});
         
         if(userAlredyExit){
-            return res.status(401).json({
+            return res.status(403).json({
                 success:false,
                 message:"User Already Exits !"
             })
@@ -37,7 +39,6 @@ export const register = async(req,res) => {
         return res.status(201).json({
             success:true,
             message:"user registered successfully",
-            user
         })
 
 
@@ -61,7 +62,7 @@ export const signIn = async(req,res) => {
             })
         }
 
-        let user = await User.findOne({email:email}).populate("chats");
+        let user = await User.findOne({email:email}).populate({path:"chats",populate:[{path:"first_user",select:"email"},{path:"second_user",select:"email"}]});
 
         if(!user){
             return res.status(401).json({
@@ -108,7 +109,7 @@ export const fetchUser = async(req,res) => {
 
         const id = req.user.id;
 
-        const user = await User.findById({_id:id}).populate("chats");
+        const user = await User.findById({_id:id}).select("-password").populate({path:"chats",populate:[{path:"first_user",select:"email"},{path:"second_user",select:"email"}]});;
 
         if(!user){
             return res.status(401).json({
@@ -135,23 +136,35 @@ export const fetchUser = async(req,res) => {
 
 export const fetchAll = async(req,res) => {
     try{
+        const { search } = req.body;
 
-        const users = await User.find().select("-password -chats");
+        if(!search){
+            return res.status(403).json({
+                success:false,
+                message:"All fields required"
+            })
+        }
+
+        const users = await User.find({
+            email: {
+                $regex: search,
+                $options: "i"
+            }
+        })
+        .select("-password -chats")
+        .limit(6);
 
         if(!users){
             return res.status(401).json({
                 success:false,
                 message:"Error In User Fetching"
             })
-        };
+        }
 
-        return res.status(200).json({
-            success:true,
-            users,
-            message:"All Users Fetched Successfully"
-        })
-
-
+        res.status(200).json({
+        success: true,
+        users
+        });
 
     }catch(error){
         return res.status(500).json({

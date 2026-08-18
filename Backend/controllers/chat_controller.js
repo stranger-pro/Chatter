@@ -38,7 +38,7 @@ export const createChat = async(req,res) => {
             $push:{
                 chats:chat._id
             }
-        },{new:true}).populate("chats");
+        },{new:true}).populate({path:"chats",populate:[{path:"first_user",select:"email"},{path:"second_user",select:"email"}]});;
         const user_2 = await User.findByIdAndUpdate(user2,{
             $push:{
                 chats:chat._id
@@ -70,7 +70,7 @@ export const fetchChat = async(req,res) => {
             })
         }
 
-        const chat = await Chat.findById(chatId).populate({path:"message",options:{sort:{createdAt:1}}});
+        const chat = await Chat.findById(chatId).populate("first_user","name email").populate("second_user","name email").populate({path:"message",options:{sort:{createdAt:1}}});
 
         if(!chat){
             return res.status(404).json({
