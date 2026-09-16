@@ -73,7 +73,7 @@ const Signin = () => {
       </form>
 
       <div className='flex text-[14px] justify-center gap-1'>
-        <span className='text-black/70'>Don't have an account?</span> <span className='text-blue-700 cursor-pointer'>Sign up</span>
+        <span className='text-black/70'>Don't have an account?</span> <span onClick={() => navigate('/signup')} className='text-blue-700 cursor-pointer'>Sign up</span>
       </div>
 
       </div>

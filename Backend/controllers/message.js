@@ -1,11 +1,12 @@
 import Chat from "../models/chat.js"
 import User from "../models/user.js"
 import Message from "../models/message.js"
+import { getReciverSocketId, io } from "../Socket/soket.js";
 
 export const sendMessage = async(req,res) => {
     try{
 
-        const {chatId,text} = req.body;
+        const {chatId,text,receiverId} = req.body;
         const sender = req.user.id;
 
         if(!chatId || !text){
@@ -20,11 +21,17 @@ export const sendMessage = async(req,res) => {
             text
         });
 
-        const chat = await Chat.findByIdAndUpdate(chatId,{
+        await Chat.findByIdAndUpdate(chatId,{
             $push:{
                 message:messageCreated._id
             }
         });
+
+        const reciverSocketId = getReciverSocketId(receiverId);
+        if(reciverSocketId){
+            io.to(reciverSocketId).emit("newMessage",messageCreated)
+        }
+
 
         return res.status(201).json({
             success:true,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState ,useEffect} from 'react'
 import logo from '../assets/user_image.jpg'
 import { useApp } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
@@ -7,21 +7,40 @@ import { LuMessageSquare } from "react-icons/lu";
 import Message from '../components/Message';
 import toast from 'react-hot-toast';
 import axios from "axios"
+import { useUserSocket } from '../context/SocketContext';
+
 
 
 const Chat = () => {
     const [message, setMessage] = useState("")
-    const {chatData,user} = useApp()
+    const {chatData,setChatData,user} = useApp()
     const navigate = useNavigate()
     const secondUser = user._id===chatData.first_user._id ? chatData.second_user : chatData.first_user
     
+    const {socket} = useUserSocket()
+
+    useEffect(() => {
+        
+        socket?.on("newMessage", (data) => {
+            
+            setChatData((prev) => {
+                return {
+                    ...prev,
+                    message: [...prev.message, data]
+                }
+            });
+        });
+        return () => socket?.off("newMessage");
+    }, [socket]);
+
     const submitHandler = async(event) => {
         try{
             event.preventDefault();
             const token = localStorage.getItem("token")
             const {data} = await axios.post(`${import.meta.env.VITE_SERVER_URL}/message/createMessage`,{
                 chatId:chatData._id,
-                text:message
+                text:message,
+                receiverId:secondUser._id
             },{
                 headers:{
                     Authorization:`Bearer ${token}`

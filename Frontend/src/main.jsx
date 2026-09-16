@@ -5,13 +5,16 @@ import App from "./App.jsx";
 import { AppProvider } from "./context/AppContext";
 import "./index.css";
 import {Toaster} from 'react-hot-toast'
+import {UserSocketProvider} from "./context/SocketContext";
  
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AppProvider>
-        <App />
-        <Toaster position="top-right"/>
+        <UserSocketProvider>
+          <App />
+          <Toaster position="top-right"/>
+        </UserSocketProvider>
       </AppProvider>
     </BrowserRouter>
   </StrictMode>

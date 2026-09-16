@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
   const [chatData, setChatData] = useState(null)
   const navigate = useNavigate()
   const [deleteId, setDeleteId] = useState("")
-  console.log(deleteId)
+ 
 
   useEffect(() => {
     const deleteMessage = async() => {
@@ -140,7 +140,7 @@ export const AppProvider = ({ children }) => {
     setChatStart,
     chatStart,
     setDeleteId,
-    
+    setChatData,
     setUser,
     chatData
   };

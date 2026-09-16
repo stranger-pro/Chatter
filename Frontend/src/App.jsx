@@ -8,7 +8,7 @@ import UnAuthRoutes from "./components/unAuthRoutes";
 import Chats from "./pages/Chats";
 import Search from "./pages/Search";
 import Chat from "./pages/Chat";
-// import NotFound from "../pages/NotFound";
+import NotFound from "./components/notFound";
 
 const App = () => {
   return (
@@ -26,7 +26,7 @@ const App = () => {
               <Route path="/search" element={<Search />} />
               <Route path="/chat/:chatid" element={<Chat />} />
           </Route>
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="*" element={<NotFound/>} />
 
         </Route>
       </Routes>

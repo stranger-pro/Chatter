@@ -4,11 +4,14 @@ import { RiLockPasswordLine } from "react-icons/ri"
 import { FaUserSecret } from "react-icons/fa";
 import toast from 'react-hot-toast';
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
 
 
 const Signup = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+
+  const navigate = useNavigate()
 
   const submitHandler = async (event) => {
     try{
@@ -66,7 +69,7 @@ const Signup = () => {
       </form>
 
       <div className='flex text-[14px] justify-center gap-1'>
-        <span className='text-black/70'>Alredy have an account?</span> <span className='text-blue-700 cursor-pointer'>Sign in</span>
+        <span className='text-black/70'>Alredy have an account?</span> <span onClick={() => navigate('/signin')} className='text-blue-700 cursor-pointer'>Sign in</span>
       </div>
 
       </div>
